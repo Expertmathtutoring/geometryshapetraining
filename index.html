@@ -1,170 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Geometry Battle</title>
-<style>
-  body {
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    color: white;
-  }
-  .game {
-    background: rgba(0, 0, 0, 0.4);
-    padding: 20px 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    width: 480px;
-  }
-  h1 {
-    font-size: 30px;
-    margin-bottom: 10px;
-  }
-  #shapeImg {
-    width: 160px;
-    height: 160px;
-    margin: 15px auto;
-    display: block;
-  }
-  #question {
-    font-size: 22px;
-    margin: 15px 0;
-  }
-  input {
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    font-size: 16px;
-    width: 70%;
-    text-align: center;
-  }
-  button {
-    margin-top: 12px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: none;
-    background: #ff9800;
-    color: white;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  button:hover {
-    background: #e68900;
-  }
-  #feedback {
-    margin-top: 15px;
-    font-size: 22px;
-    font-weight: bold;
-    min-height: 40px;
-  }
-  #score {
-    margin-top: 15px;
-    font-size: 18px;
-  }
-  .correct { 
-    color: #4CAF50; 
-    animation: pop 0.4s ease;
-  }
-  .wrong { 
-    color: #ff5252; 
-    animation: shake 0.4s ease;
-  }
-  @keyframes pop {
-    0% { transform: scale(0.8); }
-    100% { transform: scale(1); }
-  }
-  @keyframes shake {
-    0% { transform: translateX(-5px); }
-    25% { transform: translateX(5px); }
-    50% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-    100% { transform: translateX(0); }
-  }
-</style>
+  <meta charset="UTF-8">
+  <title>Geometry Learning Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #a2c2e0, #f6f7fb);
+      color: #333;
+      padding: 20px;
+    }
+    #game {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: inline-block;
+      padding: 20px;
+      max-width: 500px;
+    }
+    img {
+      max-width: 180px;
+      margin: 10px auto;
+      display: block;
+    }
+    #question {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    #feedback {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .correct {
+      color: green;
+      animation: pop 0.6s ease;
+    }
+    .wrong {
+      color: red;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+    input, button {
+      padding: 8px 12px;
+      margin-top: 8px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #aaa;
+    }
+    button {
+      cursor: pointer;
+      background: #4caf50;
+      color: white;
+      border: none;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
 </head>
 <body>
-<div class="game">
-  <h1>Geometry Battle ⚔️</h1>
-  <img id="shapeImg" src="" alt="Shape">
-  <div id="question"></div>
-  <input id="answer" placeholder="Type your answer...">
-  <br>
-  <button id="submitBtn">Submit</button>
-  <button id="nextBtn">Next</button>
-  <div id="feedback"></div>
-  <div id="score">Score: 0</div>
-</div>
+  <h1>✨ Geometry Shape Challenge ✨</h1>
+  <div id="game">
+    <div id="question"></div>
+    <img id="shapeImage" src="" alt="Shape">
+    <input id="answer" type="text" placeholder="Type your answer here">
+    <br>
+    <button onclick="checkAnswer()">Submit</button>
+    <button onclick="newQuestion()">Next</button>
+    <div id="feedback"></div>
+    <p>Score: <span id="score">0</span></p>
+  </div>
 
-<script>
-const shapes = [
-  { name: "triangle", sides: 3, angles: "60° each (equilateral)", img: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Triangle_equilateral.svg" },
-  { name: "square", sides: 4, angles: "90° each", img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Square_-_black_simple.svg" },
-  { name: "rectangle", sides: 4, angles: "90° each", img: "https://upload.wikimedia.org/wikipedia/commons/2/2e/Rectangle_example.svg" },
-  { name: "circle", sides: 0, angles: "No angles", img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Red_circle.svg" },
-  { name: "pentagon", sides: 5, angles: "108° each (regular)", img: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Regular_polygon_5_annotated.svg" },
-  { name: "hexagon", sides: 6, angles: "120° each (regular)", img: "https://upload.wikimedia.org/wikipedia/commons/3/38/Regular_polygon_6_annotated.svg" }
-];
+  <script>
+    const shapes = [
+      {
+        name: "Triangle",
+        feature: "3 sides",
+        img: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Equilateral_triangle.svg"
+      },
+      {
+        name: "Square",
+        feature: "4 equal sides",
+        img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Simple_square.svg"
+      },
+      {
+        name: "Rectangle",
+        feature: "4 sides, opposite sides equal",
+        img: "https://upload.wikimedia.org/wikipedia/commons/4/45/Rectangle_geometry.svg"
+      },
+      {
+        name: "Pentagon",
+        feature: "5 sides",
+        img: "https://upload.wikimedia.org/wikipedia/commons/5/5a/Regular_polygon_5_annotated.svg"
+      },
+      {
+        name: "Hexagon",
+        feature: "6 sides",
+        img: "https://upload.wikimedia.org/wikipedia/commons/3/38/Regular_polygon_6_annotated.svg"
+      },
+      {
+        name: "Circle",
+        feature: "No sides, round",
+        img: "https://upload.wikimedia.org/wikipedia/commons/3/3a/Circle_-_black_simple.svg"
+      }
+    ];
 
-const celebrations = [
-  "🎉 Amazing! You’re a geometry master!",
-  "🌟 Brilliant job!",
-  "🔥 You nailed it!",
-  "👏 Fantastic work!",
-  "💯 Perfect answer!",
-  "🚀 Keep it up, champ!"
-];
+    const compliments = [
+      "🌟 Brilliant! You nailed it!",
+      "👏 Awesome job!",
+      "🎉 Correct! Keep going!",
+      "💡 Smart thinking!",
+      "🔥 You're on fire!",
+      "✅ Spot on!"
+    ];
 
-let score = 0;
-let currentShape, currentQuestion, correctAnswer;
+    let currentShape, score = 0;
 
-function newQuestion() {
-  document.getElementById("feedback").textContent = "";
-  const shape = shapes[Math.floor(Math.random() * shapes.length)];
-  currentShape = shape;
-  document.getElementById("shapeImg").src = shape.img;
+    function newQuestion() {
+      const qTypes = [
+        "What shape is shown?",
+        "How many sides does this shape have?",
+        "Which shape has this feature?"
+      ];
+      const qType = qTypes[Math.floor(Math.random() * qTypes.length)];
+      currentShape = shapes[Math.floor(Math.random() * shapes.length)];
 
-  // Randomly choose a question type
-  const type = Math.floor(Math.random() * 3);
-  if (type === 0) {
-    currentQuestion = "What shape is this?";
-    correctAnswer = shape.name.toLowerCase();
-  } else if (type === 1) {
-    currentQuestion = `How many sides does this shape have?`;
-    correctAnswer = shape.sides.toString();
-  } else {
-    currentQuestion = `What are the angle properties of this shape?`;
-    correctAnswer = shape.angles.toLowerCase();
-  }
+      document.getElementById("shapeImage").src = currentShape.img;
 
-  document.getElementById("question").textContent = currentQuestion;
-  document.getElementById("answer").value = "";
-}
+      if (qType === "What shape is shown?") {
+        document.getElementById("question").textContent = qType;
+        currentShape.answer = currentShape.name.toLowerCase();
+      } else if (qType === "How many sides does this shape have?") {
+        document.getElementById("question").textContent = qType;
+        currentShape.answer = currentShape.feature.match(/\d+/) ? currentShape.feature.match(/\d+/)[0] : "0";
+      } else {
+        document.getElementById("question").textContent = `Which shape has this feature: ${currentShape.feature}?`;
+        currentShape.answer = currentShape.name.toLowerCase();
+        document.getElementById("shapeImage").src = ""; // Hide image for this type
+      }
 
-function checkAnswer() {
-  const userAns = document.getElementById("answer").value.trim().toLowerCase();
-  if (userAns === correctAnswer) {
-    score++;
-    document.getElementById("feedback").textContent = celebrations[Math.floor(Math.random() * celebrations.length)];
-    document.getElementById("feedback").className = "correct";
-  } else {
-    document.getElementById("feedback").textContent = `❌ Oops! Correct: ${correctAnswer}`;
-    document.getElementById("feedback").className = "wrong";
-  }
-  document.getElementById("score").textContent = `Score: ${score}`;
-}
+      document.getElementById("answer").value = "";
+      document.getElementById("feedback").textContent = "";
+    }
 
-document.getElementById("submitBtn").addEventListener("click", checkAnswer);
-document.getElementById("nextBtn").addEventListener("click", newQuestion);
-document.getElementById("answer").addEventListener("keydown", e => { if (e.key === "Enter") checkAnswer(); });
+    function checkAnswer() {
+      const userAns = document.getElementById("answer").value.trim().toLowerCase();
+      if (userAns === currentShape.answer) {
+        score++;
+        document.getElementById("score").textContent = score;
+        const compliment = compliments[Math.floor(Math.random() * compliments.length)];
+        document.getElementById("feedback").textContent = compliment;
+        document.getElementById("feedback").className = "correct";
+      } else {
+        document.getElementById("feedback").textContent = `❌ Oops! Correct answer: ${currentShape.answer}`;
+        document.getElementById("feedback").className = "wrong";
+      }
+    }
 
-newQuestion();
-</script>
+    newQuestion();
+  </script>
 </body>
 </html>
