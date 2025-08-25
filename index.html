@@ -1,154 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Geometry Battle</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      color: #333;
-    }
-    #question {
-      font-size: 22px;
-      margin: 15px;
-    }
-    #shapeImage {
-      max-width: 200px;
-      max-height: 200px;
-      margin: 15px auto;
-      display: block;
-      border: 3px solid #333;
-      border-radius: 12px;
-      background: #fff;
-    }
-    input, button {
-      padding: 10px;
-      font-size: 18px;
-      margin: 8px;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      background: #4CAF50;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    #feedback {
-      font-size: 20px;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    .correct {
-      color: green;
-      animation: pop 0.5s ease;
-    }
-    .wrong {
-      color: red;
-      animation: shake 0.3s ease;
-    }
-    @keyframes pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-      100% { transform: scale(1); }
-    }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Geometry Battle</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+#game {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: inline-block;
+  padding: 20px;
+  max-width: 500px;
+}
+#shapeImage {
+  width: 180px;
+  height: 180px;
+  margin: 10px auto;
+  display: block;
+  border: 3px solid #333;
+  border-radius: 12px;
+}
+#question {
+  font-size: 22px;
+  margin: 15px 0;
+}
+input, button {
+  padding: 10px;
+  font-size: 18px;
+  margin: 8px;
+  border-radius: 8px;
+  border: none;
+}
+button {
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background: #45a049;
+}
+#feedback {
+  font-size: 20px;
+  margin-top: 15px;
+  font-weight: bold;
+}
+.correct { color: green; animation: pop 0.5s ease; }
+.wrong { color: red; animation: shake 0.3s ease; }
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-5px);}
+  75%{transform:translateX(5px);}
+}
+</style>
 </head>
 <body>
-  <h1>✨ Geometry Battle ✨</h1>
+<h1>✨ Geometry Battle ✨</h1>
+<div id="game">
   <div id="question"></div>
   <img id="shapeImage" src="" alt="Shape Image">
   <input type="text" id="answer" placeholder="Type your answer">
+  <br>
   <button id="submitBtn">Submit</button>
+  <button id="nextBtn">Next</button>
   <div id="feedback"></div>
   <h2>Score: <span id="score">0</span></h2>
+</div>
 
-  <script>
-    const questions = [
-      {
-        question: "What shape is this?",
-        answer: "equilateral triangle",
-        image: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Equilateral_triangle.svg"
-      },
-      {
-        question: "How many sides does this shape have?",
-        answer: "4",
-        image: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Square_-_black_simple.svg"
-      },
-      {
-        question: "Name this shape:",
-        answer: "pentagon",
-        image: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Regular_polygon_5_annotated.svg"
-      },
-      {
-        question: "How many sides does this shape have?",
-        answer: "6",
-        image: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Regular_polygon_6_annotated.svg"
-      },
-      {
-        question: "What shape is shown here?",
-        answer: "circle",
-        image: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Circle_-_black_simple.svg"
-      }
-    ];
+<script>
+const questions = [
+  {question:"What shape is this?", answer:"triangle", image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Triangle_equilateral.svg/200px-Triangle_equilateral.svg.png"},
+  {question:"How many sides does this shape have?", answer:"4", image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Square_-_black_simple.svg/200px-Square_-_black_simple.svg.png"},
+  {question:"Name this shape:", answer:"pentagon", image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Regular_polygon_5_annotated.svg/200px-Regular_polygon_5_annotated.svg.png"},
+  {question:"How many sides does this shape have?", answer:"6", image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Regular_polygon_6_annotated.svg/200px-Regular_polygon_6_annotated.svg.png"},
+  {question:"What shape is shown here?", answer:"circle", image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Circle_-_black_simple.svg/200px-Circle_-_black_simple.svg.png"}
+];
 
-    let score = 0;
-    let currentQuestion;
+let score = 0;
+let currentQuestion;
 
-    const questionEl = document.getElementById("question");
-    const shapeImage = document.getElementById("shapeImage");
-    const answerEl = document.getElementById("answer");
-    const feedback = document.getElementById("feedback");
-    const scoreEl = document.getElementById("score");
+const questionEl = document.getElementById("question");
+const shapeImage = document.getElementById("shapeImage");
+const answerEl = document.getElementById("answer");
+const feedback = document.getElementById("feedback");
+const scoreEl = document.getElementById("score");
 
-    const praiseMessages = [
-      "🎉 Brilliant! Keep going!",
-      "🌟 You're a geometry star!",
-      "✅ Correct! You nailed it!",
-      "🔥 Fantastic! You're on fire!",
-      "💡 Smart thinking!"
-    ];
+const praiseMessages = [
+  "🎉 Brilliant! Keep going!",
+  "🌟 You're a geometry star!",
+  "✅ Correct! You nailed it!",
+  "🔥 Fantastic! You're on fire!",
+  "💡 Smart thinking!"
+];
 
-    function newQuestion() {
-      currentQuestion = questions[Math.floor(Math.random() * questions.length)];
-      questionEl.textContent = currentQuestion.question;
-      shapeImage.src = currentQuestion.image;
-      shapeImage.style.display = "block";
-      answerEl.value = "";
-      feedback.textContent = "";
-    }
+function newQuestion() {
+  currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+  questionEl.textContent = currentQuestion.question;
+  shapeImage.src = currentQuestion.image;
+  shapeImage.style.display = "block";
+  answerEl.value = "";
+  feedback.textContent = "";
+}
 
-    function checkAnswer() {
-      const userAnswer = answerEl.value.trim().toLowerCase();
-      if (userAnswer === currentQuestion.answer.toLowerCase()) {
-        score++;
-        scoreEl.textContent = score;
-        feedback.textContent = praiseMessages[Math.floor(Math.random() * praiseMessages.length)];
-        feedback.className = "correct";
-      } else {
-        feedback.textContent = `❌ Oops! The correct answer was "${currentQuestion.answer}"`;
-        feedback.className = "wrong";
-      }
-      setTimeout(newQuestion, 1500);
-    }
+function checkAnswer() {
+  const userAnswer = answerEl.value.trim().toLowerCase();
+  if(userAnswer === currentQuestion.answer.toLowerCase()){
+    score++;
+    scoreEl.textContent = score;
+    feedback.textContent = praiseMessages[Math.floor(Math.random()*praiseMessages.length)];
+    feedback.className = "correct";
+  } else {
+    feedback.textContent = `❌ Oops! The correct answer was "${currentQuestion.answer}"`;
+    feedback.className = "wrong";
+  }
+  setTimeout(newQuestion,1500);
+}
 
-    document.getElementById("submitBtn").addEventListener("click", checkAnswer);
-    answerEl.addEventListener("keydown", e => { if (e.key === "Enter") checkAnswer(); });
+document.getElementById("submitBtn").addEventListener("click",checkAnswer);
+document.getElementById("nextBtn").addEventListener("click",newQuestion);
+answerEl.addEventListener("keydown", e => { if(e.key==="Enter") checkAnswer(); });
 
-    newQuestion();
-  </script>
+newQuestion();
+</script>
 </body>
 </html>
+
